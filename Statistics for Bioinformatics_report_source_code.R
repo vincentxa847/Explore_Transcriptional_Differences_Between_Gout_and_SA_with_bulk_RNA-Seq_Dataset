@@ -79,5 +79,88 @@ ggp
 ggp = ggplot(LINC00327_spilt_by_sex, aes(x=sex,y=LINC00327))+ geom_boxplot()
 ggp
 
+#### Using expression table to find genes that only show significantly differential expression in only one group ####
+# Start to make the significant gene expression table in gout vs HC and sp vs HC 
+de_gout_vs_HC_sig_id = row.names(de_gout_vs_HC_sig) # p<0.01
+expression_de_gout_vs_HC_sig = expression_table[de_gout_vs_HC_sig_id,]
+de_sa_vs_HC_sig_id = row.names(de_sa_vs_HC_sig)
+expression_de_sa_vs_HC_sig = expression_table[de_sa_vs_HC_sig_id,]
+# Compare expression between HC and sa base on de_sa_vs_HC (we can use this to compare within group to answer task1)
+# take the second gene "ENSG00000115919" for example here
+expression_sa_sig_HC_gene2 = as.numeric(expression_de_sa_vs_HC_sig[2,c(1:9)])
+expression_sa_sig_SA_gene2 = as.numeric(expression_de_sa_vs_HC_sig[2,c(19:27)])
+mean_expression_sa_sig_HC = mean(expression_sa_sig_HC_gene2)
+mean_expression_sa_sig_SA = mean(expression_sa_sig_SA_gene2)
+p = t.test(expression_sa_sig_HC_gene2,expression_sa_sig_SA_gene2)
+p = p$p.value
+p
+# Compare expression between HC and gout base on de_sa_vs_HC (we can use this to compare within group to answer task1)
+# take the second gene "ENSG00000115919" for example here
+expression_sa_sig_HC_gene2 = as.numeric(expression_de_sa_vs_HC_sig[2,c(1:9)])
+expression_sa_sig_gout_gene2 = as.numeric(expression_de_sa_vs_HC_sig[2,c(10:18)])
+mean_expression_sa_sig_HC = mean(expression_sa_sig_HC_gene2)
+mean_expression_sa_sig_gout = mean(expression_sa_sig_gout_gene2)
+p = t.test(expression_sa_sig_HC_gene2,expression_sa_sig_gout_gene2)
+p = p$p.value
+# Create a table to store the results show the gout group expression level of HC_sa_sig_gene, 
+# this can help select the gene that only sig in sa group 
+comparsion_gout_vs_HC_sig_in_sa_sig = as.data.frame(matrix(0,ncol = 2, nrow =nrow(expression_de_sa_vs_HC_sig)))
+names(comparsion_gout_vs_HC_sig_in_sa_sig) =c("log2fold","p")
+row.names(comparsion_gout_vs_HC_sig_in_sa_sig) =row.names(expression_de_sa_vs_HC_sig)
+for (row in 1:nrow(expression_de_sa_vs_HC_sig))
+{
+  expression_sa_sig_HC = as.numeric(expression_de_sa_vs_HC_sig[row,c(1:9)])
+  expression_sa_sig_gout = as.numeric(expression_de_sa_vs_HC_sig[row,c(10:18)])
+  mean_expression_sa_sig_HC_row = mean(expression_sa_sig_HC)
+  mean_expression_sa_sig_gout_row = mean(expression_sa_sig_gout)
+  log2Fold = log2(mean_expression_sa_sig_gout_row)-log2(mean_expression_sa_sig_HC_row)
+  p_row = t.test(expression_sa_sig_HC,expression_sa_sig_gout)
+  p_row = p_row$p.value
+  
+  comparsion_gout_vs_HC_sig_in_sa_sig[row,"log2fold"] = log2Fold
+  comparsion_gout_vs_HC_sig_in_sa_sig[row,"p"] = p_row
+}
+# find out the gene that only significant express in sa group but not in gout # 8515 (target gene)
+comparsion_gout_vs_HC_sig_in_sa_sig_p0.05 = subset(comparsion_gout_vs_HC_sig_in_sa_sig,p>0.05)
+# get the value of those 8515 target genes from de_sa_vs_HC
+de_sa_vs_HC_only_sig_in_sa = de_sa_vs_HC[row.names(comparsion_gout_vs_HC_sig_in_sa_sig_p0.05),]
+# sort the table by p column (lowest will be first) in this case we have many target genes so we can use the most significant gene as target
+de_sa_vs_HC_only_sig_in_sa = de_sa_vs_HC_only_sig_in_sa[order(de_sa_vs_HC_only_sig_in_sa$p),]
+# Use the most significant gene as target to show the effect of sex on its expression , ENSG00000198074 AKR1B10 (just look at sa group)
+target1 = data.frame(t(expression_table["ENSG00000198074",]))
+target1$SEX = sample_information$SEX
+target1_in_sa = target1[c(19:27),]
+ggp = ggplot(target1_in_sa,aes(x = SEX,y=ENSG00000198074))+geom_boxplot()
+ggp # sex have no significant effect on ENSG00000198074
 
+# Create another table to store the results show that in HC_gout_sig_gene, the expression level of sa group 
+# this can help select the gene that only sig in gout group 
+comparsion_sa_vs_HC_sig_in_gout_sig = as.data.frame(matrix(0,ncol = 2, nrow =nrow(expression_de_gout_vs_HC_sig)))
+names(comparsion_sa_vs_HC_sig_in_gout_sig) =c("log2fold","p")
+row.names(comparsion_sa_vs_HC_sig_in_gout_sig) =row.names(expression_de_gout_vs_HC_sig)
+for (row in 1:nrow(expression_de_gout_vs_HC_sig))
+{
+  expression_gout_sig_HC = as.numeric(expression_de_gout_vs_HC_sig[row,c(1:9)])
+  expression_gout_sig_sa = as.numeric(expression_de_gout_vs_HC_sig[row,c(19:27)])
+  mean_expression_gout_sig_HC_row = mean(expression_gout_sig_HC)
+  mean_expression_gout_sig_sa_row = mean(expression_gout_sig_sa)
+  log2Fold = log2(mean_expression_gout_sig_sa_row)-log2(mean_expression_gout_sig_HC_row)
+  p_row = t.test(expression_gout_sig_HC,expression_gout_sig_sa)
+  p_row = p_row$p.value
+  
+  comparsion_sa_vs_HC_sig_in_gout_sig[row,"log2fold"] = log2Fold
+  comparsion_sa_vs_HC_sig_in_gout_sig[row,"p"] = p_row
+}
+# find out the gene that only significant express in gout group but not in sa # 3 (target gene)
+comparsion_sa_vs_HC_sig_in_gout_sig_p0.05 = subset(comparsion_sa_vs_HC_sig_in_gout_sig,p>0.05) 
+# get the value of those 3 target genes from de_gout_vs_HC
+de_gout_vs_HC_only_sig_in_gout = de_gout_vs_HC[row.names(comparsion_sa_vs_HC_sig_in_gout_sig_p0.05),]
+# sort the table by p column (lowest will be first) in this case we have 3 target genes so we can use the most significant gene as target
+de_gout_vs_HC_only_sig_in_gout = de_gout_vs_HC_only_sig_in_gout[order(de_gout_vs_HC_only_sig_in_gout$p),]
 
+# TU4 use the most significant gene as target to show the effect of sex on its expression , ENSG00000198363 ASPH (just look at gout group)
+target2 = data.frame(t(expression_table["ENSG00000198363",]))
+target2$SEX = sample_information$SEX
+target2_in_gout = target2[c(10:18),]
+ggp = ggplot(target2_in_gout,aes(x = SEX,y=ENSG00000198363))+geom_boxplot()
+ggp
