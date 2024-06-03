@@ -158,9 +158,53 @@ de_gout_vs_HC_only_sig_in_gout = de_gout_vs_HC[row.names(comparsion_sa_vs_HC_sig
 # sort the table by p column (lowest will be first) in this case we have 3 target genes so we can use the most significant gene as target
 de_gout_vs_HC_only_sig_in_gout = de_gout_vs_HC_only_sig_in_gout[order(de_gout_vs_HC_only_sig_in_gout$p),]
 
-# TU4 use the most significant gene as target to show the effect of sex on its expression , ENSG00000198363 ASPH (just look at gout group)
+# Use the most significant gene as target to show the effect of sex on its expression , ENSG00000198363 ASPH (just look at gout group)
 target2 = data.frame(t(expression_table["ENSG00000198363",]))
 target2$SEX = sample_information$SEX
 target2_in_gout = target2[c(10:18),]
 ggp = ggplot(target2_in_gout,aes(x = SEX,y=ENSG00000198363))+geom_boxplot()
 ggp
+
+#### Target genes data for discussion ####
+# Significant gene only in sa group
+target1 = data.frame(t(expression_table["ENSG00000198074",]))
+target1$NEUTROPHILS = sample_information$NEUTROPHILS
+target1$SEX = sample_information$SEX
+target1$SEX = as.factor(target1$SEX)
+target2 = data.frame(t(expression_table["ENSG00000115919",]))
+target2$NEUTROPHILS = sample_information$NEUTROPHILS
+target2$SEX = sample_information$SEX
+target2$SEX = as.factor(target2$SEX)
+target3 = data.frame(t(expression_table["ENSG00000124102",]))
+target3$NEUTROPHILS = sample_information$NEUTROPHILS
+target3$SEX = sample_information$SEX
+target3$SEX = as.factor(target3$SEX)
+target4 = data.frame(t(expression_table["ENSG00000188373",]))
+target4$NEUTROPHILS = sample_information$NEUTROPHILS
+target4$SEX = sample_information$SEX
+target4$SEX = as.factor(target4$SEX)
+target5 = data.frame(t(expression_table["ENSG00000135114",]))
+target5$NEUTROPHILS = sample_information$NEUTROPHILS
+target5$SEX = sample_information$SEX
+target5$SEX = as.factor(target5$SEX)
+# Significant gene only in gout group
+target6 = data.frame(t(expression_table["ENSG00000198363",]))
+target6$NEUTROPHILS = sample_information$NEUTROPHILS
+target6$SEX = sample_information$SEX
+target6$SEX = as.factor(target6$SEX)
+target7 = data.frame(t(expression_table["ENSG00000118096",]))
+target7$NEUTROPHILS = sample_information$NEUTROPHILS
+target7$SEX = sample_information$SEX
+target7$SEX = as.factor(target7$SEX)
+target8 = data.frame(t(expression_table["ENSG00000130540",]))
+target8$NEUTROPHILS = sample_information$NEUTROPHILS
+target8$SEX = sample_information$SEX
+target8$SEX = as.factor(target8$SEX)
+
+# Because we just have 30 sample groups, so use density plot rather boxplot is better
+ggp = ggplot(target2,aes(x=ENSG00000115919,fill=SEX)) + geom_density()
+ggp
+# Do some statistic test in target gene TU5
+mean(target8$NEUTROPHILS)
+summary(target8[19:27,])
+sd(target8[19:27,1])
