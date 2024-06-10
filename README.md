@@ -21,7 +21,9 @@ ggplot(de_gout_vs_HC ,aes(x = log2Fold, y = -log(p.adj,10)))+geom_point(colour =
 ggplot(de_sa_vs_HC ,aes(x = log2Fold, y = -log(p.adj,10)))+geom_point(colour = "black")+geom_point(data = gene_data_sig_sa_vs_HC, colour = "red")
 ```
 ![Figure1](https://github.com/vincentxa847/Statistics-for-Bioinformatics-Msc_course/assets/118545004/b258ee61-7506-4551-8366-d1c5ffcb4c00)
+*Figure1 p.adj value < 0.05 genes between HC and gout*
 ![Figure 2](https://github.com/vincentxa847/Statistics-for-Bioinformatics-Msc_course/assets/118545004/419321df-51e9-42ea-ae97-a9c73d102445)
+*Figure2 p.adj value < 0.05 genes between HC and SA*
 
 
 
