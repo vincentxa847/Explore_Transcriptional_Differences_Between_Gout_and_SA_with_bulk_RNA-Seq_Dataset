@@ -201,10 +201,26 @@ target8$NEUTROPHILS = sample_information$NEUTROPHILS
 target8$SEX = sample_information$SEX
 target8$SEX = as.factor(target8$SEX)
 
-# Because we just have 30 sample groups, so use density plot rather boxplot is better
+#### Using density plot to see the effect of sex on target genes expression and the distribution of target genes in different groups ####
+# Because we just have 30 sample groups, so use density plot rather boxplot is better 
 ggp = ggplot(target2,aes(x=ENSG00000115919,fill=SEX)) + geom_density()
 ggp
-# Do some statistic test in target gene TU5
+# Do some statistic test in target gene (testing)
 mean(target8$NEUTROPHILS)
-summary(target8[19:27,])
+summary(target8[19:27,]) 
 sd(target8[19:27,1])
+# See the distribution of target gene in different group 
+ggp = ggplot(target8[1:9,],aes(x=ENSG00000130540))+geom_density()
+ggp # HC, most of them distribute in x = 5
+ggp = ggplot(target8[10:18,],aes(x=ENSG00000130540))+geom_density()
+ggp # gout, most of them distribute in about x=50, have a significant peak in about x= 550
+ggp = ggplot(target8[19:27,],aes(x=ENSG00000130540))+geom_density()
+ggp # gout most of them distribute in x = 20
+
+ggp = ggplot(target1[1:9,],aes(x=ENSG00000198074))+geom_density()
+ggp # HC, most of them distribute in x = 50, have a significant peak in about x= 75 and 100
+ggp = ggplot(target1[10:18,],aes(x=ENSG00000198074))+geom_density()
+ggp # gout, most of them distribute in about x=45
+ggp = ggplot(target1[19:27,],aes(x=ENSG00000198074))+geom_density()
+ggp # gout most of them distribute in x = 4500 , have a broad peak in about x = 6500
+
