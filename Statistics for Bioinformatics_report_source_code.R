@@ -224,3 +224,67 @@ ggp # gout, most of them distribute in about x=45
 ggp = ggplot(target1[19:27,],aes(x=ENSG00000198074))+geom_density()
 ggp # gout most of them distribute in x = 4500 , have a broad peak in about x = 6500
 
+#### Correlation test to EVALUATE THE EFFECT OF NEUTROPHILS ####
+cor(target8$ENSG00000130540,target8$NEUTROPHILS) # overall
+cor(target8[1:9,]$ENSG00000130540,target8[1:9,]$NEUTROPHILS) # HC group
+cor(target8[10:18,]$ENSG00000130540,target8[10:18,]$NEUTROPHILS) # gout group
+cor(target8[19:27,]$ENSG00000130540,target8[19:27,]$NEUTROPHILS) # sa group
+# plot the correlation
+ggp = ggplot(target8,aes(x=ENSG00000130540,y=NEUTROPHILS))+geom_point()
+ggp # no significant correlation ( for neutrophil score )
+ggp = ggplot(target8,aes(y=ENSG00000130540,fill=SEX))+geom_boxplot()
+ggp # no significant correlation ( for sex )
+ggp = ggplot(target8[10:18,],aes(y=ENSG00000130540,fill=SEX))+geom_boxplot()
+ggp # see the correlation within group
+ggp = ggplot(target8[1:9,],aes(y=ENSG00000130540,fill=SEX))+geom_boxplot()
+ggp # see the correlation within  target 8 HC group (have some different) # figure 1
+ggp = ggplot(target6[10:18,],aes(y=ENSG00000198363,fill=SEX))+geom_boxplot()
+ggp # see the correlation within  target 6 gout group (have some different) # figure 2
+ggp = ggplot(target6,aes(y=ENSG00000198363,fill=SEX))+geom_boxplot() # figure 3
+ggp # the correlation in target6 across group show an opposite trend compare to within gout group
+ 
+
+#### GLM [for sex (factor), anova] ####
+## target 6
+model_target6_sex = lm(target6$ENSG00000198363 ~ target6$SEX)
+anova(model_target6_sex)
+# Response: target6$ENSG00000198363
+# Df   Sum Sq Mean Sq F value Pr(>F)
+# target6$SEX  1    10395   10395  0.0078 0.9303 # no significant relation across group. although in figure 2, it seems to have some relation between expression and sex
+# Residuals   25 33323283 1332931
+ 
+## target  8
+model_target8_sex = lm(target8$ENSG00000130540 ~ target8$SEX)
+anova(model_target8_sex)
+# Response: target8$ENSG00000130540
+# Df Sum Sq Mean Sq F value Pr(>F)
+# target8$SEX  1  10338   10338  0.9959 0.3279 # no significant relation across group
+# Residuals   25 259514   10380
+
+# Response: target8[10:18, ]$ENSG00000130540
+# Df Sum Sq Mean Sq F value Pr(>F)
+# target8[10:18, ]$SEX  1  30450   30450  1.1371 0.3217# no significant relation within gout group. although in figure 1, it seems to have some relation between expression and sex 
+# Residuals             7 187456   26780
+  
+
+# GLM [for NEUTROPHILS SCORE (variable), linear model]
+# HIPK2 (ENSG00000064393, most significant gene in de_gout_HC) see the correlation in geom_point
+HIPK2 = data.frame(t(expression_de_gout_anno_sig["HIPK2",-c(28:30)]))
+HIPK2$neutrophils= sample_information$NEUTROPHILS
+model_HIPK2_neu = lm(HIPK2$HIPK2 ~ HIPK2$neutrophils)
+
+summary(model_HIPK2_neu)
+# Residuals:
+#  Min      1Q  Median      3Q     Max 
+# -853.89 -434.55    4.61  413.67  581.59 
+
+lm(formula = HIPK2$HIPK2 ~ HIPK2$neutrophils)
+# Coefficients:
+# (Intercept)         529.04     196.86   2.687   0.0126 *  # have correlation
+#   HIPK2$neutrophils    99.42      20.85   4.769 6.78e-05 ***
+
+# Visualize the model fit (for factor) TU6
+ggp = ggplot(target8, aes(x = SEX, y = ENSG00000130540 , fill = SEX))+ geom_violin()+stat_summary(fun=mean)
+ggp # figure4 from violin plot we can see that the samples are not a good distribution here
+# this may be the reason why it look to have some different in boxblot but actually no relation by annova test
+
