@@ -3,16 +3,16 @@
 ## Introduction
 Patient with SA shares a similar clinical presentation with gout, which makes the diagnosis of SA challenging.
 Delay and inadequate treatment can result in irreversible joint destruction of joint and even case-fatality.
-As a result, it is crucial to find out the biomarker of these two diseases and can be used in blood diagnosis to distinguish SA from gout.\
-In this project, the transcriptional level of 29814 genes in blood samples collected from Healthy group, Gout group and SA group were measured.
-*The main aim of this report is to search for the genes that only have significant different between SA and healthy group also between gout and healthy group (target genes).*\
-The influence of sex and neutrophil score on genes are also evaluated to clarify the relationship between expression level of genes and clinical measurements.
+As a result, it is crucial to find out the biomarker of two diseases and can be used in blood diagnosis to distinguish SA from gout.\
+In this project, the transcriptional levels of 29814 genes in blood samples collected from Healthy group, Gout group and SA group were measured.
+* The main aim of this report is to identify the genes that show significant differences only between the SA and Healthy groups, as well as between the Gout and Healthy groups (target genes).*\
+Additionally, the influence of sex and neutrophil score on gene expression is evaluated to clarify the relationship between gene expression levels and clinical measurements.
 
 ## Method
-In this report, *t-test* is performed using R to compare the expression level of gene in different groups. Each group has 8 samples and the expression value of gene in each sample within a group will be collected and make a comparison with other group to get the p-value and log2fold change. *Pearson correlation test* is used to test the correlation. *ANOVA test* is performed to test the correlation of sex (factor) and gene expression. General Linear model is used to test the correlation of neutrophil score and gene expression. 
+In this report, *t-test* is performed using R to compare gene expression levels across different groups. Each group consists of 8 samples and gene expression values from each sample within a group were collected  and compared with those from other groups to obtain p-values and log2 fold changes. *Pearson correlation test* was used to assess the correlation. *ANOVA test* was performed to examine the correlation between sex (factor) and gene expression. General Linear model was used to investigate the correlation between neutrophil score and gene expression. 
 
 ## Result
-Using the p.adj values in de_gout_vs_HC and de_sa_vs_HC to get the significant differential genes between Healthy (HC) and disease groups.
+Using the p.adj values in de_gout_vs_HC and de_sa_vs_HC (Table of Differential Values) to get the significant differential genes between Healthy (HC) and disease groups.
 **69 genes (de_gout_vs_HC_sig)** show significant different between HC and gout (p.adj <0.05) and **13046 genes (de_sa_vs_HC_sig)** show significant different between HC and SA (p.adj <0.05).
 ```
 gene_data_sig_gout_vs_HC = subset(de_gout_vs_HC, p.adj < 0.05) 
@@ -47,7 +47,7 @@ de_sa_vs_HC_only_sig_in_sa = de_sa_vs_HC[row.names(comparsion_gout_vs_HC_sig_in_
 It turns out that **8515 genes have significant differential expression exclusively between HC and SA groups (de_sa_vs_HC_only_sig_in_sa, target genes)** and **3 genes that have significant differential expression exclusively between HC and gout groups (de_gout_vs_HC_only_sig_in_gout, target genes)**. For the 8515 genes, target genes were identified by narrowing down based on log2 fold change.
 
 ```
-# Sort the table by log2Fold (positive and negative value for up- an down regulation) and select  the top 10 genes as target genes
+# Sort the table by log2Fold (positive and negative value for up- an down regulation) and select the top 10 genes as target genes
 de_sa_vs_HC_only_sig_in_sa_up = de_sa_vs_HC_only_sig_in_sa[order(de_sa_vs_HC_only_sig_in_sa$log2Fold, decreasing = TRUE),]
 de_sa_vs_HC_only_sig_in_sa_up = de_sa_vs_HC_only_sig_in_sa_up[c(1:10),]
 de_sa_vs_HC_only_sig_in_sa_down = de_sa_vs_HC_only_sig_in_sa[order(de_sa_vs_HC_only_sig_in_sa$log2Fold),]
@@ -64,7 +64,7 @@ ggplot(de_gout_vs_HC ,aes(x = log2Fold, y = -log(p.adj,10)))+geom_point(colour =
 ![de_gout_vs_HC_only_sig_in_gout](https://github.com/vincentxa847/Statistics-for-Bioinformatics-Msc_course/assets/118545004/e95adfc4-82b3-4a29-880e-ad49b65e34ee)\
 *Genes showing significant differential expression exclusively between between HC and gout.*
 
-After target genes being selected, the effect of clinical measurements is evaluated. Searching from the de_gout_vs_HC_sig, HIPK2 is selected and plotted. It is clear that HIPK2 expressions show a positive correlation with neutrophil score across three groups. Pearson correlation test shows the correlation value equal to 0.6902029, which means a positive correlation between HIPK2 expressions and neutrophil score. Then, general linear model (GLM) is applied to confirm the relationship. The variables of GLM for HIPK2 and neutrophil score are intercept equal to 529.04 and slope equal to 99.42. 
+After selecting the target genes, the effect of clinical measurements is evaluated. From the de_gout_vs_HC_sig dataset, *HIPK2* was selected and plotted. The data clearly show that HIPK2 expression is positively correlated with neutrophil scores across the three groups. Pearson correlation test yields the correlation value of 0.6902029, indicating a positive correlation between HIPK2 expressions and neutrophil score. To further confirm this relationship, General Linear Model (GLM) was applied. The GLM variables for HIPK2 and neutrophil scores indicate an intercept of 529.04 and a slope of 99.42.
 
 ```
 HIPK2 = data.frame(t(expression_de_gout_anno_sig["HIPK2",-c(28:30)]))
@@ -78,7 +78,7 @@ ggplot(HIPK2, aes(x = HIPK2,y=neutrophils)) + geom_point()+ geom_smooth(method =
 ![HIPK2_NEUTROPHILS](https://github.com/vincentxa847/Statistics-for-Bioinformatics-Msc_course/assets/118545004/f4880b4d-fce1-451d-959f-8b6f78ae020f)\
 *Correlation between HIPK2 expression and neutrophil score*
 
-But there is no clear relationship between HIPK expressions and sex, and the p-value of the F-statistic of ANOVA test is 0.858 showing the result that the null hypothesis cannot be rejected. 
+However, there is no clear relationship between HIPK2 expression and sex. The p-value of the F-statistic from the ANOVA test is 0.858, indicating that the null hypothesis cannot be rejected.
 
 ```
 HIPK2$sex= sample_information$SEX
@@ -91,5 +91,5 @@ ggplot(HIPK2,aes(y=HIPK2,x=sex))+ geom_boxplot()
 *Distribution of HIPK2 in male and female*
 
 ## Discussion
-In this report, markers in blood that can be used to distinguish gout and SA were found. 3 target genes in gout group, which are *ASPH, IFT46, and SULT4A1*. [Aspartate β-hydroxylase (ASPH) is a highly conserved enzyme that is widely expressed in proliferating placenta trophoblastic cells](https://pubmed.ncbi.nlm.nih.gov/33125119/). This enzyme is also a biomarker and potential target of cancer cells. [IFT46 is a core component of the intraflagellar transport machinery and is related to the formation of all cilia](https://pubmed.ncbi.nlm.nih.gov/25722189/). In the data provided, IFT46 has a significant downregulation in gout group (p.adj =0.006439270). Most of the researches about IFT46 are to characterize its function in cilia and therefore the role of IFT46 in human disease remains future investigation. SULT4A1 was identified in human and rat brain and belongs to [sulphotransferase (SULT) gene family](https://pubmed.ncbi.nlm.nih.gov/10698717/). [SULT4A1 is associated with several neurologic disorders such as Phelan McDermid syndrome](https://pubmed.ncbi.nlm.nih.gov/18823757/). SULT4A1 show a notable upregulation in gout group in the data provided means its role in inflammatory disease worth investigating.\
-There are 8515 target genes in gout group. Genes that shows the most significant difference is *AKR1B10*, it shows a significant upregulation in gout group. AKR1B10 is a human nicotinamide adenine dinucleotide phosphate (NADPH)-dependent reductase belonging to the aldo-keto reductase (AKR) 1B subfamily. [AKR1B family are related to diabetes and Inflammatory Disease](https://pubmed.ncbi.nlm.nih.gov/30362099/) but its mechanism in disease remains unclear and requires further research to confirm. Although target genes in this dataset have significant difference between control and disease group. However, target genes show a wide range of biological functions, which makes it difficult to further investigate its molecular meanings in disease. 
+In this report, blood markers that can be used to distinguish gout and SA were identified. Three target genes in the gout group were found: *ASPH, IFT46, and SULT4A*. [Aspartate β-hydroxylase (ASPH) is a highly conserved enzyme that is widely expressed in proliferating placenta trophoblastic cells](https://pubmed.ncbi.nlm.nih.gov/33125119/). This enzyme is also a biomarker and potential drug target of cancer cells. [IFT46 is a core component of the intraflagellar transport machinery and is related to the formation of all cilia](https://pubmed.ncbi.nlm.nih.gov/25722189/). In the provided data, IFT46 shows significant downregulation in gout group (p.adj =0.006439270). Most research on IFT46 focuses on its function in cilia and therefore its role in human disease remains future investigation. SULT4A1 was identified in both human and rat brain and belongs to [sulphotransferase (SULT) gene family](https://pubmed.ncbi.nlm.nih.gov/10698717/). [It is associated with several neurologic disorders such as Phelan McDermid syndrome](https://pubmed.ncbi.nlm.nih.gov/18823757/). The data provided show a notable upregulation of SULT4A1 in the gout group, showing its role in inflammatory disease worth investigating.\
+Out of the 8515 target genes in the gout group, the gene that exhibits the most significant difference is *AKR1B10*, which shows a notable upregulation. AKR1B10 is a human nicotinamide adenine dinucleotide phosphate (NADPH)-dependent reductase belonging to the aldo-keto reductase (AKR) 1B subfamily. [The AKR1B family is associated with diabetes and Inflammatory Disease](https://pubmed.ncbi.nlm.nih.gov/30362099/) but its mechanism in disease remains unclear and requires further research to confirm. While target genes in this dataset exhibit significant differences between control and disease groups, they also encompass a wide range of biological functions. The diversity makes it challenging to investigate their molecular mechanism in disease. 
