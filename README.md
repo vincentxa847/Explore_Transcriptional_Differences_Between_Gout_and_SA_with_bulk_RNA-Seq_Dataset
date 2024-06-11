@@ -1,4 +1,4 @@
-# Using RNA-Seq Dataset to Explore the Transcriptional Differences Between Gout (GA) and Septic Arthritis (SA) in Blood
+# Using RNA-Seq Dataset to Explore the Transcriptional Differences Between Gout (GA) and Septic Arthritis (SA) Blood Sample
 
 ## Introduction
 Patient with SA shares a similar clinical presentation with gout, which makes the diagnosis of SA challenging.
@@ -82,5 +82,11 @@ But there is no clear relationship between HIPK expressions and sex, and the p-v
 
 ```
 HIPK2$sex= sample_information$SEX
+model_HIPK2_sex = lm(HIPK2$HIPK2 ~ HIPK2$sex)
+anova(model_HIPK2_sex)
+
 ggplot(HIPK2,aes(y=HIPK2,x=sex))+ geom_boxplot()
 ```
+![HIPK2_SEX](https://github.com/vincentxa847/Statistics-for-Bioinformatics-Msc_course/assets/118545004/b3af3b42-c1d7-418a-8708-b05c3073b61b)\
+*Distribution of HIPK2 in male and female*
+
