@@ -3,10 +3,9 @@
 ## Introduction
 Patient with SA shares a similar clinical presentation with gout, which makes the diagnosis of SA challenging.
 Delay and inadequate treatment can result in irreversible joint destruction of joint and even case-fatality.
-As a result, it is crucial to find out the biomarker of two diseases and can be used in blood diagnosis to distinguish SA from gout.\
-In this project, the transcriptional levels of 29814 genes in blood samples collected from Healthy group, Gout group and SA group were measured.
-* The main aim of this report is to identify the genes that show significant differences only between the SA and Healthy groups, as well as between the Gout and Healthy groups (target genes).*\
-Additionally, the influence of sex and neutrophil score on gene expression is evaluated to clarify the relationship between gene expression levels and clinical measurements.
+As a result, it is crucial to find out the biomarker of two diseases and can be used in blood diagnosis to distinguish SA from gout. In this report, the transcriptional levels of 29814 genes in blood samples collected from Healthy group, Gout group and SA group were measured.
+* The main aim of this report is to identify the genes that show significant differences only between the SA and Healthy groups, as well as between the Gout and Healthy groups (target genes).
+* The influence of sex and neutrophil score on gene expression is evaluated to clarify the relationship between gene expression levels and clinical measurements.
 
 ## Method
 In this report, *t-test* is performed using R to compare gene expression levels across different groups. Each group consists of 8 samples and gene expression values from each sample within a group were collected  and compared with those from other groups to obtain p-values and log2 fold changes. *Pearson correlation test* was used to assess the correlation. *ANOVA test* was performed to examine the correlation between sex (factor) and gene expression. General Linear model was used to investigate the correlation between neutrophil score and gene expression. 
