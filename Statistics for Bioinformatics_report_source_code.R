@@ -1,9 +1,9 @@
 #### Import the data ####
-de_gout_vs_HC = read.table("C:/Users/user/Desktop/Msc courses/Statistics for Bioinformatics/Data for Report Assessment-20221015/DE_GOUT_vs_HC.csv", header=TRUE, row.names=1, sep="\t")  
-de_sa_vs_HC = read.table("C:/Users/user/Desktop/Msc courses/Statistics for Bioinformatics/Data for Report Assessment-20221015/DE_SA_vs_HC.csv", header=TRUE, row.names=1, sep="\t") 
-expression_table = read.table("C:/Users/user/Desktop/Msc courses/Statistics for Bioinformatics/Data for Report Assessment-20221015/Expression_Table.csv", header=TRUE, row.names=1, sep="\t")  
-sample_information =read.table("C:/Users/user/Desktop/Msc courses/Statistics for Bioinformatics/Data for Report Assessment-20221015/Sample_Information.csv", header = TRUE, row.names = 1, sep = "\t")
-annotations = read.table("C:/Users/user/Desktop/Msc courses/Statistics for Bioinformatics/Data for Report Assessment-20221015/Annotations.csv", header =  TRUE, row.names = 1, sep = "\t")
+de_gout_vs_HC = read.table("../Data for Report Assessment-20221015/DE_GOUT_vs_HC.csv", header=TRUE, row.names=1, sep="\t")  
+de_sa_vs_HC = read.table("../Data for Report Assessment-20221015/DE_SA_vs_HC.csv", header=TRUE, row.names=1, sep="\t") 
+expression_table = read.table("../Data for Report Assessment-20221015/Expression_Table.csv", header=TRUE, row.names=1, sep="\t")  
+sample_information =read.table("../Data for Report Assessment-20221015/Sample_Information.csv", header = TRUE, row.names = 1, sep = "\t")
+annotations = read.table("../Data for Report Assessment-20221015/Annotations.csv", header =  TRUE, row.names = 1, sep = "\t")
 
 #### Merge expression,annotation and de table. Then create table to subset the de genes of sa and gouts respectively ####
 # merge expression and annotation table 
