@@ -9,6 +9,13 @@ As a result, it is crucial to find out the biomarker of two diseases and can be 
 
 ## Method
 In this report, *t-test* is performed using R to compare gene expression levels across different groups. Each group consists of 8 samples and gene expression values from each sample within a group were collected  and compared with those from other groups to obtain p-values and log2 fold changes. *Pearson correlation test* was used to assess the correlation. *ANOVA test* was performed to examine the correlation between sex (factor) and gene expression. General Linear model was used to investigate the correlation between neutrophil score and gene expression. 
+### Dataset Used
+- Expression Values Table: Expression_Table.csv
+- Sample Information Sheet: Lists important clinical information about each sample (Sample_Information.csv)
+- Annotation Table: Links gene ID to gene name and their coordinates (Annotations.csv)
+- Differential Expression Files: Contains log2 fold change, p-values, and adjusted p-values, comparing Healthy to Gout (DE_GOUT_vs_HC.csv) and Healthy to SA (DE_SA_vs_HC.csv)
+
+### 
 
 ## Result
 Using the p.adj values in de_gout_vs_HC and de_sa_vs_HC (Table of Differential Values) to get the significant differential genes between Healthy (HC) and disease groups.
